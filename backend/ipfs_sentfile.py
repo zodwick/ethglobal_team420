@@ -17,17 +17,20 @@ def upload_file(api_key, file_path):
 
     return response
 
+
+
+# .json()['Hash']
 # Example usage
-api_key = 'd950c97d.62a441ee89fd4365a0227e3305434e9e'
-file_path = 'file.png'
+# api_key = 'd950c97d.62a441ee89fd4365a0227e3305434e9e'
+# file_path = 'file.png'
 
-upload_response = upload_file(api_key, file_path)
+# upload_response = upload_file(api_key, file_path)
 
-print(upload_response.text)
+# print(upload_response.text)
 
-hash=upload_response.json()['Hash']
+# hash=upload_response.json()['Hash']
 
-print(hash)
+# print(hash)
 
 # print(get_file(hash))
 
