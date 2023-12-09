@@ -1,6 +1,5 @@
 // Imports
 import { ethers } from 'ethers';
-
 // Constants
 let PROGRAM_ADDRESS;
 const RPC_URL = 'https://stylus-testnet.arbitrum.io/rpc';

@@ -85,12 +85,11 @@ def ipfs():
 
 @app.route("/onchain", methods=["POST"])
 def onchain():
-    prompt = request.json["prompt"]
-    language = request.json["language"]
+ 
     input = request.json["input"]
     program = request.json["program"]
 
-    command = "node test2.js"+program+input
+    command = "node ./stylus-as-example_js/test/maintest.js "+program+" "+str(input)
     result = subprocess.run(command, shell=True,
                                     check=True, text=True, capture_output=True)
 

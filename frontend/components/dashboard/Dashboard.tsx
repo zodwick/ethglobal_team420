@@ -10,15 +10,14 @@ import { langs } from "@uiw/codemirror-extensions-langs";
 import axios from "axios"; // Import Axios
 
 import Sidebar from "./Sidebar";
-import File from "./File";
 import Rightbar from "./Rightbar";
 
 export default function Dashboard() {
   const handleGenerateContract = (prompt: string, language: string) => {
     // Your code to make the Axios request
     const requestData = {
-      prompt: prompt,
-      language: language,
+      prompt: prompt || "simple hash function",
+      language: language || "Rust",
     };
 
     console.log("Request Data:", requestData);
@@ -34,8 +33,57 @@ export default function Dashboard() {
       })
       .catch((error) => {
         console.log(error);
-        // Handle the error as needed
       });
+  };
+
+  const [CheckContractResponse, setCheckContractResponse] = useState(null);
+  const handleCheckContract = (prompt: string, language: string) => {
+    // Your code to make the Axios request
+    const requestData = {
+      prompt: prompt || "simple hash function",
+      language: language || "Rust",
+    };
+
+    axios
+      .post("http://127.0.0.1:5000/check", requestData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        const parseddata = JSON.parse(response.data.data);
+        setCheckContractResponse(parseddata);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const [DeployContractResponse, setDeployContractResponse] = useState(null);
+  const handleDeployContract = (prompt: string, language: string) => {
+    console.log("Deploy Contract");
+    // Your code to make the Axios request
+    const requestData = {
+      prompt: prompt || "simple hash function",
+      language: language || "Rust",
+    };
+
+    axios
+      .post("http://127.0.0.1:5000/deploy", requestData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("Response:", response);
+        const parseddata = JSON.parse(response.data);
+        setDeployContractResponse(parseddata);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+
   };
   const languages = [
     "Typescript",
@@ -48,8 +96,8 @@ export default function Dashboard() {
     "Javascript",
     "Elixr",
   ];
-  const [send, setSend] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("Typescript");
+  console.log("CheckContractResponse:", CheckContractResponse);
+  const [selectedLanguage, setSelectedLanguage] = useState("Rust");
 
   const obj = ``;
   const [currentPrompt, setCurrentPrompt] = useState(obj);
@@ -119,14 +167,18 @@ export default function Dashboard() {
             </div>
 
             <div className="w-full rounded-xl px-14 ">
-              <CodeMirror
-                value={value}
-                extensions={[langs.rust()]}
-                onChange={onChange}
-                theme={githubDark}
-                height="100%"
-                width="100%"
-              />
+              {value ? (
+                <CodeMirror
+                  value={value}
+                  extensions={[langs.rust()]}
+                  onChange={onChange}
+                  theme={githubDark}
+                  height="100%"
+                  width="100%"
+                />
+              ) : (
+                <div></div>
+              )}
             </div>
           </div>
         </div>
@@ -134,7 +186,57 @@ export default function Dashboard() {
           className="flex w-full rounded-r-3xl bg-slate-200 sm:w-64 m-0 p-0"
           style={{ flex: 1.2 }}
         >
-          <Rightbar />
+          <div className="flex flex-col items-left py-6 px-7 mr-4 w-full justify-start">
+            <div className="flex gap-1 w-1/2 flex-col mt-3">
+              <button
+                className="w-full bg-blue-500 text-white  rounded-2xl py-2 "
+                onClick={() =>
+                  handleCheckContract(currentPrompt, selectedLanguage)
+                }
+              >
+                Check Contract
+              </button>
+            </div>
+
+            <div className=" text-gray-700">
+              {CheckContractResponse &&
+                Object.entries(CheckContractResponse).map(([key, value]) => (
+                  <div key={key}>
+                    <h2>{key}</h2>
+                    {value != null ? (
+                      <p className="text-green-400">{value as string}</p>
+                    ) : (
+                      <p className="text-red-500">False</p>
+                    )}{" "}
+                  </div>
+                ))}
+            </div>
+
+            <div className="flex gap-1 w-1/2 flex-col mt-3">
+              <button
+                className="w-full bg-blue-500 text-white  rounded-2xl py-2 "
+                onClick={() =>
+                  handleDeployContract(currentPrompt, selectedLanguage)
+                }
+              >
+                Deploy Contract
+              </button>
+            </div>
+
+            <div className=" text-gray-700">
+              {DeployContractResponse &&
+                Object.entries(DeployContractResponse).map(([key, value]) => (
+                  <div key={key}>
+                    <h2>{key}</h2>
+                    {value != null ? (
+                      <p className="text-green-400">{value as string}</p>
+                    ) : (
+                      <p className="text-red-500">False</p>
+                    )}{" "}
+                  </div>
+                ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
