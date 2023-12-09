@@ -1,7 +1,7 @@
 import json
 from flask import Flask,jsonify
 from flask import request
-from codegen import CodeGen
+from codegen import CodeGen, writeCodeToFile
 from scriptrun import Check, Deploy
 from extract import extract
 from ipfs_sentfile import upload_file
@@ -87,7 +87,6 @@ def onchain():
     input = request.json["input"]
     program = request.json["program"]
 
-
     command = "node test2.js"+program+input
     result = subprocess.run(command, shell=True,
                                     check=True, text=True, capture_output=True)
@@ -97,7 +96,31 @@ def onchain():
     
 
 
+@app.route("/edit", methods=["POST"])
+def edit():
+    prompt = request.json["prompt"]
+    language = request.json["language"]
+    edited_code = request.json["edited_code"]
+
+    if language == "js" or language == "javascript" or language == "ts" or language == "typescript":
+        writeCodeToFile(
+            code=edited_code, filename="./stylus-as-example_js/assembly/app.ts")
+        return "edited"
     
+    elif language == "rs" or language == "rust":
+        if "hashing" in prompt.lower() or "hash" in prompt.lower():
+            writeCodeToFile(
+                code=edited_code, filename="./stylus-as-example_rs/hashing/src/lib.rs")
+            return "edited"
+        else:
+            writeCodeToFile(
+                code=edited_code, filename="./stylus-as-example_rs/voting/src/lib.rs")
+            return "edited"
+        
+    else:
+        return "error"
+
+
 
 
 
