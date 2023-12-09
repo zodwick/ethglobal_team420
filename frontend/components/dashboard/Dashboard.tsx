@@ -82,8 +82,6 @@ export default function Dashboard() {
       .catch((error) => {
         console.log(error);
       });
-
-
   };
   const languages = [
     "Typescript",
@@ -109,6 +107,33 @@ export default function Dashboard() {
     },
     []
   );
+
+  const [testvalue, setTestValue] = useState("0");
+  const [chainadress, setChainAdress] = useState("0x0");
+  const [testResponse, setTestResponse] = useState(null);
+  const handleTest = (prompt: string, language: string) => {
+    console.log("Deploy Contract");
+    // Your code to make the Axios request
+    const requestData = {
+      input: testvalue,
+      program: chainadress,
+    };
+
+    axios
+      .post("http://127.0.0.1:5000/onchain", requestData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("Response:", response);
+        const parseddata = JSON.parse(response.data);
+        setTestResponse(parseddata.output);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div className="bg-[#141618] flex min-h-screen w-full">
       <div
@@ -235,6 +260,36 @@ export default function Dashboard() {
                     )}{" "}
                   </div>
                 ))}
+            </div>
+
+            <div className="flex flex-col">
+              <input
+                type="text"
+                placeholder="Enter Contract Address"
+                className="w-full px-4 py-3 mt-2 rounded-2xl bg-slate-50 text-gray-600 "
+                onChange={(e) => {
+                  setChainAdress(e.target.value);
+                }}
+              />
+              <input
+                type="number"
+                placeholder="Enter value to test"
+                className="w-full px-4 py-3 my-2 rounded-2xl bg-slate-50 text-gray-600 "
+                onChange={(e) => {
+                  setTestValue(e.target.value);
+                }}
+              />
+
+              <button
+                className="w-full bg-blue-500 text-white  rounded-2xl py-2 "
+                onClick={() =>
+                  handleTest(currentPrompt, selectedLanguage)
+                }
+              >
+                Test
+              </button>
+
+              {testResponse && <p className="text-green-400">{testResponse}</p>}
             </div>
           </div>
         </div>

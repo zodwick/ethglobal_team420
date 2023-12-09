@@ -1,22 +1,7 @@
 import { i32ToBytes, bytesToI32 } from './utils';
 
-// Unsigned square root
-function usqrt(n: i32): i32 {
-  let x = n;
-  let y = (x + 1) >> 1;
-  while (y < x) {
-    x = y;
-    y = (x + n / x) >> 1;
-  }
-  return x;
-}
-
-function sqrtOfTwoNumbers(a: i32, b: i32): i32 {
-  // Calculate the product of two numbers
-  const product = a * b;
-
-  // Return the square root of the product
-  return usqrt(product);
+function sumOfTwoNumbers(a: i32, b: i32): i32 {
+  return a + b;
 }
 
 /**
@@ -27,18 +12,9 @@ function sqrtOfTwoNumbers(a: i32, b: i32): i32 {
  * @returns bytes in Uint8Array
  */
 export const main = (input: Uint8Array): Uint8Array => {
-  // Assume that the input contains two 4-byte integers
-  if (input.length != 8) {
-    throw new Error('Invalid input. Expected 8 bytes.');
-  }
-
-  // Extract the two integers from the input
-  const a = bytesToI32(input.slice(0, 4));
-  const b = bytesToI32(input.slice(4, 8));
-
-  // Calculate the square root of the product of the two numbers
-  const sqrtProduct = sqrtOfTwoNumbers(a, b);
-
-  // Return the result as bytes
-  return i32ToBytes(sqrtProduct);
+  // Assuming the input contains two 4-byte integers
+  const num1 = bytesToI32(input.slice(0, 4));
+  const num2 = bytesToI32(input.slice(4, 8));
+  const sum = sumOfTwoNumbers(num1, num2);
+  return i32ToBytes(sum);
 };
