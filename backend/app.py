@@ -1,7 +1,9 @@
+import json
 from flask import Flask
 from flask import request,jsonify
 from codegen import CodeGen
-from scriptrun import Check
+from scriptrun import Check, Deploy
+from extract import extract
 from ipfs_sentfile import upload_file
 
 
@@ -27,8 +29,25 @@ def post():
 def check():
     prompt = request.json["prompt"]
     language = request.json["language"]
-    Code = CodeGen(prompt, language)
-    return {"Code": Code}
+    checkOutput = Check(prompt, language)
+    extracted = extract(str(checkOutput))
+    extractedjson = json.dumps(extracted)
+    return extractedjson
+
+
+@app.route("/deploy", methods=["POST"])
+def deploy():
+    prompt = request.json["prompt"]
+    language = request.json["language"]
+    deployOutput = Deploy(prompt, language)
+    extracted = extract(str(deployOutput))
+    extractedjson = json.dumps(extracted)
+    return extractedjson
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 
 @app.route("/ipfs", methods=["POST"])
