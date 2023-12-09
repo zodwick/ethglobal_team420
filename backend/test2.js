@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 
 // Constants
 let PROGRAM_ADDRESS;
-let RPC_URL;
+const RPC_URL = 'https://stylus-testnet.arbitrum.io/rpc';
 
 // Initial setup
 let stylusProvider;
@@ -20,8 +20,7 @@ const main = async (inputNumber) => {
   console.log(`Input: ${inputNumber}`);
   console.log('Calling program...');
  
-  RPC_URL = process.argv[2];
-  PROGRAM_ADDRESS = process.argv[3];
+  PROGRAM_ADDRESS = process.argv[2];
 
   stylusProvider = new ethers.JsonRpcProvider(RPC_URL);
 
@@ -41,7 +40,7 @@ const main = async (inputNumber) => {
 ////////////////
 
 // Arguments check
-if (process.argv.length !== 4) {
+if (process.argv.length !== 3) {
   console.log('Usage: npm run test:onchain <RPC_URL> <PROGRAM_ADDRESS> <inputNumber>');
   process.exit(1);
 }
@@ -53,7 +52,7 @@ console.log('');
 
 // Getting arguments
 
-const inputNumber = process.argv[4];
+const inputNumber = process.argv[3];
 
 // Initializing provider with provided RPC_URL
 
