@@ -1,13 +1,15 @@
 import { i32ToBytes, bytesToI32 } from './utils';
 
-// Function to calculate factorial
-function factorial(n: i32): i32 {
-  let result: i32 = 1;
-  while (n > 1) {
-    result *= n;
-    n -= 1;
+function sumOfDigits(n: i32): i32 {
+  let sum: i32 = 0;
+  let num: i32 = n;
+
+  while (num > 0) {
+    sum += num % 10;
+    num = num / 10;
   }
-  return result;
+
+  return sum;
 }
 
 /**
@@ -19,6 +21,6 @@ function factorial(n: i32): i32 {
  */
 export const main = (input: Uint8Array): Uint8Array => {
   const number = bytesToI32(input);
-  const fact = factorial(number);
-  return i32ToBytes(fact);
+  const sum = sumOfDigits(number);
+  return i32ToBytes(sum);
 };
