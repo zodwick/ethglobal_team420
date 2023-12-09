@@ -1,9 +1,12 @@
 import json
-from flask import Flask, jsonify
+from flask import Flask
 from flask import request
 from codegen import CodeGen
 from scriptrun import Check, Deploy
 from extract import extract
+from ipfs_sentfile import upload_file
+
+
 app = Flask(__name__)
 
 
@@ -43,5 +46,6 @@ def deploy():
     return extractedjson
 
 
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True) 
