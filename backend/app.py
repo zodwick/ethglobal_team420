@@ -7,9 +7,12 @@ from extract import extract
 from ipfs_sentfile import upload_file
 import subprocess
 import os
+from flask_cors import CORS
+
 
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/")
@@ -22,7 +25,7 @@ def hello():
 def post():
     prompt = request.json["prompt"]
     # example: calculate the square root of a number
-    language = request.json["language"]
+    language = request.json["language"].lower()
     Code = CodeGen(prompt, language)
     # replace all space with &nbsp
     # Code = Code.replace(" ", "&nbsp;")
@@ -32,7 +35,7 @@ def post():
 @app.route("/check", methods=["POST"])
 def check():
     prompt = request.json["prompt"]
-    language = request.json["language"]
+    language = request.json["language"].lower()
     checkOutput = Check(prompt, language)
     extracted = extract(str(checkOutput))
     return jsonify({"data": extracted})
@@ -41,7 +44,7 @@ def check():
 @app.route("/deploy", methods=["POST"])
 def deploy():
     prompt = request.json["prompt"]
-    language = request.json["language"]
+    language = request.json["language"].lower()
     deployOutput = Deploy(prompt, language)
     extracted = extract(str(deployOutput))
     extractedjson = json.dumps(extracted)
@@ -54,7 +57,7 @@ def ipfs():
     # Get the API key from the request headers
     api_key = 'd950c97d.62a441ee89fd4365a0227e3305434e9e'
 
-    language = request.json["language"]
+    language = request.json["language"].lower()
     prompt = request.json["prompt"]
 
     if language == "js" or language == "javascript" or language == "ts" or language == "typescript":

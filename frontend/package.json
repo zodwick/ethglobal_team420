@@ -16,6 +16,7 @@
     "@uiw/codemirror-theme-github": "^4.21.21",
     "@uiw/codemirror-theme-okaidia": "^4.21.21",
     "@uiw/react-codemirror": "^4.21.21",
+    "axios": "^1.6.2",
     "framer-motion": "^10.16.16",
     "next": "14.0.4",
     "react": "^18",
