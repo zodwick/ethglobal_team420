@@ -9,9 +9,20 @@ def upload_file(api_key, file_path):
         'Authorization': f'Bearer {api_key}'
     }
 
-    files = {
-        'file': ('output.jpeg', open(file_path, 'rb'))
-    }
+    if file_path=='./stylus-as-example_js/assembly/app.ts':
+        files = {
+            'file': ('code.ts', open(file_path, 'rb'))
+        }
+
+    elif file_path=='./stylus-as-example_rs/hashing/src/lib.rs':
+        files = {
+            'file': ('code.rs', open(file_path, 'rb'))
+        }    
+
+    elif file_path=='./stylus-as-example_rs/voting/src/lib.rs':
+        files = {
+            'file': ('code.rs', open(file_path, 'rb'))
+        }
 
     response = requests.post(url, headers=headers, files=files)
 

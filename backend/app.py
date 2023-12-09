@@ -94,7 +94,7 @@ def onchain():
                                     check=True, text=True, capture_output=True)
 
 
-    return result.stdout
+    return {"output": result.stdout}
     
 
 
