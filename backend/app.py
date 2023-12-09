@@ -52,12 +52,16 @@ def ipfs():
     api_key = 'd950c97d.62a441ee89fd4365a0227e3305434e9e'
 
     language = request.json["language"]
+    prompt = request.json["prompt"]
 
     if language == "js" or language == "javascript" or language == "ts" or language == "typescript":
         file_path = './stylus-as-example_js/assembly/app.ts'
 
     elif language == "rs" or language == "rust":
-        file_path = './stylus-as-example_rs/hashing/src/lib.rs'
+        if "hashing" in prompt.lower() or "hash" in prompt.lower():
+            file_path = './stylus-as-example_rs/hashing/src/lib.rs'
+        else:
+            file_path = './stylus-as-example_rs/voting/src/lib.rs'
    
 
     # Upload the file to IPFS using the upload_file function
