@@ -10,6 +10,22 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        body: ["var(--font-poppins)", "sans-serif"],
+        body1: ["var(--font-inter)", "sans-serif"],
+        body2: ["var(--font-sora)", "sans-serif"],
+        body3: ["var(--font-rubik)", "sans-serif"],
+        body4: ["var(--font-urbanist)", "sans-serif"],
+        body5: ["var(--font-min)", "sans-serif"],
+        body6: ["ClashDisplay-Semibold"],
+      },
+      fontWeight: {
+        300: 300,
+        500: 500,
+        600: 600,
+        700: 700,
+        800: 800,
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
