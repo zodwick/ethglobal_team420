@@ -1,11 +1,9 @@
 import subprocess
-
-
 def jsruntime():
     commands = [
         "npm run asbuild:release",
         "cargo stylus check --wasm-file-path ./build/release.wasm",
-        "cargo stylus deploy --wasm-file-path ./build/release.wasm --private-key=YOUR_PRIVATE_KEY --estimate-gas-only",
+        "cargo stylus deploy --wasm-file-path ./build/release.wasm --private-key=7006c6ccdc4d7a46b7ac0007599730f287ca8e8ded9792a66a4102a99f084395 --estimate-gas-only",
         "cargo stylus deploy --wasm-file-path ./build/release.wasm --private-key=7006c6ccdc4d7a46b7ac0007599730f287ca8e8ded9792a66a4102a99f084395",
         "npm run test:onchain 56"
     ]
