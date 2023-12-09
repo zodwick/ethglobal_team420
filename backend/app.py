@@ -51,21 +51,14 @@ def ipfs():
     # Get the API key from the request headers
     api_key = 'd950c97d.62a441ee89fd4365a0227e3305434e9e'
 
-    # Check if the file is included in the request
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part in the request'}), 400
+    language = request.json["language"]
 
-    file = request.files['file']
+    if language == "js" or language == "javascript" or language == "ts" or language == "typescript":
+        file_path = './stylus-as-example_js/assembly/app.ts'
 
-    # Check if the file is not empty
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
-
-    # Specify the file path on the server (adjust as needed)
-    file_path = 'uploaded_file.png'
-
-    # Save the uploaded file to the server
-    file.save(file_path)
+    elif language == "rs" or language == "rust":
+        file_path = './stylus-as-example_rs/hashing/src/lib.rs'
+   
 
     # Upload the file to IPFS using the upload_file function
     upload_response = upload_file(api_key, file_path)
