@@ -1,10 +1,9 @@
 import Image from "next/image";
-import Hero from "../components/landinpage/Hero";
 
 export default function Home() {
   return (
     <>
-      <div className="bg-[#001d32] min-h-screen">
+      <div className="bg-[#001d32] fixed w-full min-h-screen">
         <header className="py-4 bg-[#001d32] sm:py-6">
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
@@ -54,7 +53,7 @@ export default function Home() {
 
               <nav className="hidden md:flex md:items-center md:justify-end md:space-x-12">
                 <a
-                  href="#"
+                  href="/dashboard"
                   title=""
                   className="text-base font-body4 font-normal text-gray-400 transition-all duration-200 hover:text-white"
                 >
@@ -67,16 +66,16 @@ export default function Home() {
 
         <section className="py-16  bg-[#001d32] sm:pb-16 lg:pb-20 xl:pb-24">
           <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
-            <div className="relative mt-5">
+            <div className="relative mt-5 flex gap-6">
               <div className="lg:w-2/3 z-50 relative">
                 <p className="text-sm font-body4 font-normal tracking-widest text-gray-300 uppercase">
                   A Hub for Developers, Founders & Designers
                 </p>
-                <h1 className="mt-6 text-4xl font-body4 font-normal text-white sm:mt-10 sm:text-5xl lg:text-6xl xl:text-6xl">
+                <h1 className="mt-6 text-4xl  font-body4 font-normal text-white sm:mt-10 sm:text-5xl lg:text-6xl xl:text-6xl">
                   <span className="text-transparent leading-normal bg-clip-text bg-gradient-to-r from-cyan-500 to-purple-500">
-                    Deploy your ideas{" "}
+                    Deploy your ideas
                   </span>{" "}
-                  Into Contracts
+                  into <br></br> smart Contracts
                 </h1>
                 <p className="max-w-lg mt-4 text-xl font-body1 font-normal text-gray-400 sm:mt-8">
                   Deploy Instantly, Code Swiftly: Arbitrum Unleashed for
@@ -85,7 +84,7 @@ export default function Home() {
                 <div className="relative inline-flex items-center justify-center mt-8 sm:mt-12 group">
                   <div className="absolute transition-all duration-200 rounded-full -inset-px bg-gradient-to-r from-cyan-500 to-purple-500 group-hover:shadow-lg group-hover:shadow-cyan-500/50"></div>
                   <a
-                    href="#"
+                    href="/dashboard"
                     title=""
                     className="relative font-body4 font-semibold inline-flex items-center justify-center px-8 py-3 text-base  text-white bg-black border border-transparent rounded-full"
                     role="button"

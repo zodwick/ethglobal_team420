@@ -60,7 +60,7 @@ const fontVariables = ` ${robotoFont.variable} ${soraFont.variable} ${poppinsFon
 
 return (
   <html lang="en" className={fontVariables}>
-    <body className={inter.className}>
+    <body className="bg-black" >
       <Providers>{children}</Providers>
     </body>
   </html>
