@@ -46,10 +46,6 @@ def deploy():
 
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
-
 @app.route("/ipfs", methods=["POST"])
 def ipfs():
     # Get the API key from the request headers
@@ -83,3 +79,8 @@ def ipfs():
         return jsonify({'error': 'File upload to IPFS failed'}), upload_response.status_code
 
     
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True) 
