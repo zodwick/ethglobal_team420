@@ -1,7 +1,9 @@
+import json
 from flask import Flask
 from flask import request
 from codegen import CodeGen
-from scriptrun import Check,Deploy
+from scriptrun import Check, Deploy
+from extract import extract
 app = Flask(__name__)
 
 
@@ -25,11 +27,21 @@ def check():
     prompt = request.json["prompt"]
     language = request.json["language"]
     checkOutput = Check(prompt, language)
-    return {"checkOutput": checkOutput}
+    extracted = extract(str(checkOutput))
+    extractedjson = json.dumps(extracted)
+    return extractedjson
+
 
 @app.route("/deploy", methods=["POST"])
 def deploy():
     prompt = request.json["prompt"]
     language = request.json["language"]
     deployOutput = Deploy(prompt, language)
-    return {"deployOutput": deployOutput}
+    extracted = extract(str(deployOutput))
+    extractedjson = json.dumps(extracted)
+    return extractedjson
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
