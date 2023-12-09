@@ -1,5 +1,6 @@
 import subprocess
 
+
 def jsruntime():
     commands = [
         "npm run asbuild:release",
@@ -14,7 +15,6 @@ def jsruntime():
             command = "cd stylus-as-example_js/ &&" + command
             result = subprocess.run(command, shell=True,
                                     check=True, text=True, capture_output=True)
-
             # Print the command and its output
             print(f"Command: {command}")
             print("Output:")
@@ -28,7 +28,6 @@ def jsruntime():
             print(f"Command: {command}")
             print(f"Error: {e}")
             print("=" * 50)
-
 
 
 def rsruntime(example):
@@ -41,12 +40,11 @@ def rsruntime(example):
         try:
             # Run the command and capture the output
             if example == "hashing":
-                command = "cd stylus-as-example_rs/ && " +"cd hashing/ && "+ command
+                command = "cd stylus-as-example_rs/ && " + "cd hashing/ && " + command
             elif example == "voting":
-                command = "cd stylus-as-example_rs/ && " +"cd voting/ && "+ command
+                command = "cd stylus-as-example_rs/ && " + "cd voting/ && " + command
             result = subprocess.run(command, shell=True,
                                     check=True, text=True, capture_output=True)
-
             # Print the command and its output
             print(f"Command: {command}")
             print("Output:")
@@ -60,5 +58,6 @@ def rsruntime(example):
             print(f"Command: {command}")
             print(f"Error: {e}")
             print("=" * 50)
+
 
 rsruntime()
