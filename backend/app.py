@@ -5,6 +5,8 @@ from codegen import CodeGen
 from scriptrun import Check, Deploy
 from extract import extract
 from ipfs_sentfile import upload_file
+import subprocess
+import os
 
 
 app = Flask(__name__)
@@ -74,6 +76,25 @@ def ipfs():
         return jsonify({'ipfs_hash': ipfs_hash}), 200
     else:
         return jsonify({'error': 'File upload to IPFS failed'}), upload_response.status_code
+
+    
+
+@app.route("/onchain", methods=["POST"])
+def onchain():
+    prompt = request.json["prompt"]
+    language = request.json["language"]
+    input = request.json["input"]
+    program = request.json["program"]
+
+
+    command = "node test2.js"+program+input
+    result = subprocess.run(command, shell=True,
+                                    check=True, text=True, capture_output=True)
+
+
+    return result.stdout
+    
+
 
     
 
