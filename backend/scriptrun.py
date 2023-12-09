@@ -100,6 +100,49 @@ def Check(prompt: str, language: str):
                 outputdict[command] = {"stdout": "error", "stderr": e}
 
         return outputdict
-    
+
     else:
         return "language not supported"
+
+
+def Deploy(prompt: str, language: str):
+    if language == "js" or language == "javascript" or language == "ts" or language == "typescript":
+        commands = commands_js[-2]
+        outputdict = {}
+        for command in commands_js:
+            try:
+                # Run the command and capture the output
+                command = "cd stylus-as-example_js/ &&" + command
+                result = subprocess.run(command, shell=True,
+                                        check=True, text=True, capture_output=True)
+
+                outputdict[command] = {
+                    "stdout": result.stdout, "stderr": result.stderr}
+
+            except subprocess.CalledProcessError as e:
+                outputdict[command] = {"stdout": "error", "stderr": e}
+
+        return outputdict
+    
+    elif language == "rs" or language == "rust":
+        commands = commands_rs[2]
+        outputdict = {}
+        for command in commands_rs:
+            try:
+                if prompt == "hashing":
+                    command = "cd stylus-as-example_rs/ && " + "cd hashing/ && " + command
+                elif prompt == "voting":
+                    command = "cd stylus-as-example_rs/ && " + "cd voting/ && " + command
+                result = subprocess.run(command, shell=True,
+                                        check=True, text=True, capture_output=True)
+
+                outputdict[command] = {
+                    "stdout": result.stdout, "stderr": result.stderr}
+
+            except subprocess.CalledProcessError as e:
+                outputdict[command] = {"stdout": "error", "stderr": e}
+
+        return outputdict
+
+    else:
+        return "language not supported" 

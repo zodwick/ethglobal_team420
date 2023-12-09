@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request
 from codegen import CodeGen
-from scriptrun import Check
+from scriptrun import Check,Deploy
 app = Flask(__name__)
 
 
@@ -24,5 +24,12 @@ def post():
 def check():
     prompt = request.json["prompt"]
     language = request.json["language"]
-    Code = CodeGen(prompt, language)
-    return {"Code": Code}
+    checkOutput = Check(prompt, language)
+    return {"checkOutput": checkOutput}
+
+@app.route("/deploy", methods=["POST"])
+def deploy():
+    prompt = request.json["prompt"]
+    language = request.json["language"]
+    deployOutput = Deploy(prompt, language)
+    return {"deployOutput": deployOutput}
