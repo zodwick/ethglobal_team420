@@ -51,7 +51,7 @@ def CodeGen(prompt: str, lang: str) -> str:
 
         return Code
 
-    elif lang == "rs":
+    elif lang == "rs" or lang == "rust":
         if "hashing" in prompt.lower() or "hash" in prompt.lower():
             with open("./stylus-as-example_rs/hashing/src/lib.rs", "r") as file:
                 data = file.read()
