@@ -1,6 +1,6 @@
 import json
-from flask import Flask
-from flask import request,jsonify
+from flask import Flask,jsonify
+from flask import request
 from codegen import CodeGen
 from scriptrun import Check, Deploy
 from extract import extract
@@ -24,6 +24,8 @@ def post():
     # example: calculate the square root of a number
     language = request.json["language"]
     Code = CodeGen(prompt, language)
+    # replace all space with &nbsp
+    # Code = Code.replace(" ", "&nbsp;")
     return {"Code": Code}
 
 
@@ -33,8 +35,7 @@ def check():
     language = request.json["language"]
     checkOutput = Check(prompt, language)
     extracted = extract(str(checkOutput))
-    extractedjson = json.dumps(extracted)
-    return extractedjson
+    return jsonify({"data": extracted})
 
 
 @app.route("/deploy", methods=["POST"])
