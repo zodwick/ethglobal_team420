@@ -29,7 +29,7 @@ hash=upload_response.json()['Hash']
 
 print(hash)
 
-print(get_file(hash))
+# print(get_file(hash))
 
 
 
