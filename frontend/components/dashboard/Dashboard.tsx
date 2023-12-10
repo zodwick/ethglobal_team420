@@ -2,7 +2,7 @@
 
 import { run } from "node:test";
 import React, { useState, useEffect } from "react";
-import { Input, Select, SelectIte, Button } from "@nextui-org/react";
+import { Input, Select, SelectItem, Button } from "@nextui-org/react";
 import CodeMirror from "@uiw/react-codemirror";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import { dracula } from "@uiw/codemirror-theme-dracula";
@@ -16,7 +16,10 @@ import Rightbar from "./Rightbar";
 export default function Dashboard() {
   const [address, setAddress] = useState<String>("");
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingc, setIsLoadingc] = useState(false);
+  const [isLoadingd, setIsLoadingd] = useState(false);
+  const [isLoadingg, setIsLoadingg] = useState(false);
+  const [isLoadingt, setIsLoadingt] = useState(false);
   useEffect(() => {
     const address = window.localStorage.getItem("address");
     setAddress(address || "");
@@ -24,7 +27,7 @@ export default function Dashboard() {
   console.log("Address:", address);
 
   const handleGenerateContract = (prompt: string, language: string) => {
-    setIsLoading(true);
+    setIsLoadingg(true);
     // Your code to make the Axios request
     const requestData = {
       prompt: prompt || "simple hash function",
@@ -41,16 +44,17 @@ export default function Dashboard() {
       })
       .then((response: { data: { Code: React.SetStateAction<string> } }) => {
         setValue(response.data.Code);
-        setIsLoading(false);
+        setIsLoadingg(false);
       })
       .catch((error) => {
         console.log(error);
-        setIsLoading(false);
+        setIsLoadingg(false);
       });
   };
 
   const [CheckContractResponse, setCheckContractResponse] = useState(null);
   const handleCheckContract = (prompt: string, language: string) => {
+    setIsLoadingc(true);
     // Your code to make the Axios request
     const requestData = {
       prompt: prompt || "simple hash function",
@@ -68,15 +72,17 @@ export default function Dashboard() {
         setCheckContractResponse(parseddata);
         setIsCheckContract(true);
         toast.success("Successfully checked!");
+        setIsLoadingc(false);
       })
       .catch((error) => {
         console.log(error);
+        setIsLoadingc(false);
       });
   };
 
   const [DeployContractResponse, setDeployContractResponse] = useState(null);
   const handleDeployContract = (prompt: string, language: string) => {
-    setIsLoading(true);
+    setIsLoadingd(true);
     console.log("Deploy Contract");
     // Your code to make the Axios request
     const requestData = {
@@ -95,11 +101,11 @@ export default function Dashboard() {
         const parseddata = JSON.parse(response.data);
         setDeployContractResponse(parseddata);
         toast.success("Successfully Deployed!");
-        setIsLoading(false);
+        setIsLoadingd(false);
       })
       .catch((error) => {
         console.log(error);
-        setIsLoading(false);
+        setIsLoadingd(false);
       });
   };
   const languages = [
@@ -134,7 +140,8 @@ export default function Dashboard() {
   const [chainadress, setChainAdress] = useState("0x0");
   const [testResponse, setTestResponse] = useState(null);
   const handleTest = (prompt: string, language: string) => {
-    setIsLoading(true);
+    toast.success("Successfully tested!");
+    setIsLoadingt(true);
     console.log("Deploy Contract");
     // Your code to make the Axios request
     const requestData = {
@@ -153,11 +160,11 @@ export default function Dashboard() {
         const parseddata = JSON.parse(response.data);
         setTestResponse(parseddata.output);
         toast.success("Successfully tested!");
-        setIsLoading(false);
+        setIsLoadingt(false);
       })
       .catch((error) => {
         console.log(error);
-        setIsLoading(false);
+        setIsLoadingt(false);
       });
   };
   return (
@@ -216,7 +223,7 @@ export default function Dashboard() {
 
             <div className="flex gap-1 px-12 justify-start items-start w-full flex-col mt-3">
               <Button
-                isLoading={isLoading}
+                isLoading={isLoadingg}
                 className="w-fit px-8 font-body4 bg-blue-500 text-white  rounded-2xl py-2 "
                 onClick={() =>
                   handleGenerateContract(currentPrompt, selectedLanguage)
@@ -248,36 +255,45 @@ export default function Dashboard() {
         >
           <div className="flex flex-col  items-left py-6 px-7 mr-4 w-full justify-between">
             <div className="">
-              <div className="flex gap-1 w-full flex-col mt-3">
-                <Button
-                  isLoading={isLoading}
-                  className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-2 "
-                  onClick={() =>
-                    handleCheckContract(currentPrompt, selectedLanguage)
-                  }
-                >
-                  Check Contract
-                </Button>
-              </div>
-
-              <div className=" text-gray-700">
-                {CheckContractResponse &&
-                  Object.entries(CheckContractResponse).map(([key, value]) => (
-                    <div key={key}>
-                      <h2>{key}</h2>
-                      {value != null ? (
-                        <p className="text-green-400">{value as string}</p>
-                      ) : (
-                        <p className="text-red-500">False</p>
-                      )}{" "}
-                    </div>
-                  ))}
-              </div>
-
+              {!isCheckContract && (
+                <div className="flex gap-1 w-full flex-col mt-3">
+                  <Button
+                    isLoading={isLoadingc}
+                    className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-2 "
+                    onClick={() =>
+                      handleCheckContract(currentPrompt, selectedLanguage)
+                    }
+                  >
+                    Check Contract
+                  </Button>
+                </div>
+              )}
+              {isCheckContract && (
+                <div className=" text-gray-700 bg-white rounded-xl border border-green-600 p-3 break-words overscroll-y-none py-3">
+                  {" "}
+                  {CheckContractResponse &&
+                    Object.entries(CheckContractResponse).map(
+                      ([key, value]) => (
+                        <div key={key} className=" py-2 ">
+                          <h2 className=" font-semibold  font-body text-medium">
+                            {key}
+                          </h2>
+                          {value != null ? (
+                            <p className="text-green-700 text-sm font-semibold">
+                              {value as string}
+                            </p>
+                          ) : (
+                            <p className="text-red-500">False</p>
+                          )}{" "}
+                        </div>
+                      )
+                    )}
+                </div>
+              )}
               {isCheckContract && (
                 <div className="flex gap-1 w-full flex-col mt-3">
                   <Button
-                    isLoading={isLoading}
+                    isLoading={isLoadingd}
                     className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-2 "
                     onClick={() =>
                       handleDeployContract(currentPrompt, selectedLanguage)
@@ -288,19 +304,26 @@ export default function Dashboard() {
                 </div>
               )}
 
-              <div className=" text-gray-700">
-                {DeployContractResponse &&
-                  Object.entries(DeployContractResponse).map(([key, value]) => (
-                    <div key={key}>
-                      <h2>{key}</h2>
-                      {value != null ? (
-                        <p className="text-green-400">{value as string}</p>
-                      ) : (
-                        <p className="text-red-500">False</p>
-                      )}{" "}
-                    </div>
-                  ))}
-              </div>
+              {DeployContractResponse && (
+                <div className=" text-gray-700 mt-3 bg-white rounded-xl border border-green-600 p-3 break-words overscroll-y-none py-3">
+                  {Object.entries(DeployContractResponse).map(
+                    ([key, value]) => (
+                      <div key={key} className=" py-2 ">
+                        <h2 className=" font-semibold  font-body text-medium">
+                          {key}
+                        </h2>
+                        {value != null ? (
+                          <p className="text-green-700 text-sm font-semibold">
+                            {value as string}
+                          </p>
+                        ) : (
+                          <p className="text-red-500">False</p>
+                        )}{" "}
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
             </div>
             {!isTestContract && (
               <div>
@@ -338,7 +361,7 @@ export default function Dashboard() {
                   />
 
                   <Button
-                    isLoading={isLoading}
+                    isLoading={isLoadingt}
                     className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-3 "
                     onClick={() => handleTest(currentPrompt, selectedLanguage)}
                   >
