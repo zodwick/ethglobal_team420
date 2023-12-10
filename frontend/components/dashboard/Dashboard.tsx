@@ -20,6 +20,8 @@ export default function Dashboard() {
   const [isLoadingd, setIsLoadingd] = useState(false);
   const [isLoadingg, setIsLoadingg] = useState(false);
   const [isLoadingt, setIsLoadingt] = useState(false);
+  const [isLoadingi, setIsLoadingi] = useState(false);
+
   useEffect(() => {
     const address = window.localStorage.getItem("address");
     setAddress(address || "");
@@ -153,7 +155,6 @@ export default function Dashboard() {
       .post("https://1ad7-14-195-9-98.ngrok-free.app/onchain", requestData, {
         headers: {
           "Content-Type": "application/json",
-
         },
       })
       .then((response) => {
@@ -165,6 +166,35 @@ export default function Dashboard() {
       .catch((error) => {
         console.log(error);
         setIsLoadingt(false);
+      });
+  };
+
+  const [ipfshash, setIPFSHash] = useState("");
+  const handleIPFS = (prompt: string, language: string) => {
+    setIsLoadingi(true);
+    console.log("ipfs Contract");
+    // Your code to make the Axios request
+    const requestData = {
+      prompt: prompt,
+      language: language,
+    };
+    console.log("Request Data:", requestData);
+
+    axios
+      .post("https://1ad7-14-195-9-98.ngrok-free.app/ipfs", requestData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("Response:", response);
+        setIPFSHash(response.data.ipfs_hash);
+        toast.success("Successfully stored!");
+        setIsLoadingi(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoadingi(false);
       });
   };
   return (
@@ -359,7 +389,6 @@ export default function Dashboard() {
                       setTestValue(e.target.value);
                     }}
                   />
-
                   <Button
                     isLoading={isLoadingt}
                     className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-3 "
@@ -367,9 +396,22 @@ export default function Dashboard() {
                   >
                     Test
                   </Button>
-
+                  <Button
+                    isLoading={isLoadingi}
+                    className="w-full bg-blue-500 mt-2 font-body4 text-white  rounded-2xl py-3 "
+                    onClick={() => handleIPFS(currentPrompt, selectedLanguage)}
+                  >
+                    Store to lighthouse
+                  </Button>
                   {testResponse && (
-                    <p className="text-green-800  px-2 py-2 border border-green-400 bg-white rounded-xl mt-3">{testResponse}</p>
+                    <p className="text-green-800  px-2 py-2 border border-green-400 bg-white rounded-xl mt-3">
+                      {testResponse}
+                    </p>
+                  )}{" "}
+                  {ipfshash && (
+                    <p className="text-green-800  px-2 py-2 border  break-words border-green-400 bg-white rounded-xl mt-3">
+                      {ipfshash}
+                    </p>
                   )}
                 </div>
               </div>
