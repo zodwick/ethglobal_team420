@@ -189,7 +189,7 @@ export default function Dashboard() {
               <h1 className="font-body4 items-center font-bold text-3xl  text-blue-950">
                 Explain the contract you need{" "}
               </h1>
-              <p className="item-center content-center flex justify-center font-body1">
+              <p className="item-center content-center text-black flex justify-center font-body1">
                 Your wallet Id: {address}
               </p>
             </div>
