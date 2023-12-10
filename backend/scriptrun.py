@@ -66,7 +66,7 @@ def Check(prompt: str, language: str):
     if language == "js" or language == "javascript" or language == "ts" or language == "typescript":
         commands = commands_js[0:2]
         outputlist = []
-        for command in commands_js:
+        for command in commands:
             try:
                 # Run the command and capture the output
                 command = "cd stylus-as-example_js/ &&" + command
