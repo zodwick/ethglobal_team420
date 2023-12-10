@@ -53,7 +53,7 @@ export default function Home() {
 
               <nav className="hidden md:flex md:items-center md:justify-end md:space-x-12">
                 <a
-                  href="/dashboard"
+                  href="/connect"
                   title=""
                   className="text-base font-body4 font-normal text-gray-400 transition-all duration-200 hover:text-white"
                 >
@@ -84,7 +84,7 @@ export default function Home() {
                 <div className="relative inline-flex items-center justify-center mt-8 sm:mt-12 group">
                   <div className="absolute transition-all duration-200 rounded-full -inset-px bg-gradient-to-r from-cyan-500 to-purple-500 group-hover:shadow-lg group-hover:shadow-cyan-500/50"></div>
                   <a
-                    href="/dashboard"
+                    href="/connect"
                     title=""
                     className="relative font-body4 font-semibold inline-flex items-center justify-center px-8 py-3 text-base  text-white bg-black border border-transparent rounded-full"
                     role="button"

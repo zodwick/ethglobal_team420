@@ -1,18 +1,28 @@
 "use client";
 
 import { run } from "node:test";
-import React, { useState } from "react";
-import { Select, SelectItem } from "@nextui-org/react";
+import React, { useState, useEffect } from "react";
+import { Input, Select, SelectItem } from "@nextui-org/react";
 import CodeMirror from "@uiw/react-codemirror";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import { langs } from "@uiw/codemirror-extensions-langs";
 import axios from "axios"; // Import Axios
+import { Toaster, toast } from "react-hot-toast";
 
 import Sidebar from "./Sidebar";
 import Rightbar from "./Rightbar";
 
 export default function Dashboard() {
+  const [address, setAddress] = useState<String>("");
+  
+
+  useEffect(() => {
+    const address = window.localStorage.getItem("address");
+    setAddress(address || "");
+  }, []);
+  console.log("Address:", address);
+
   const handleGenerateContract = (prompt: string, language: string) => {
     // Your code to make the Axios request
     const requestData = {
@@ -23,12 +33,12 @@ export default function Dashboard() {
     console.log("Request Data:", requestData);
 
     axios
-      .post("http://127.0.0.1:5000/genCode", requestData, {
+      .post("https://e1bc-14-195-9-98.ngrok-free.app/genCode", requestData, {
         headers: {
           "Content-Type": "application/json",
         },
       })
-      .then((response) => {
+      .then((response: { data: { Code: React.SetStateAction<string> } }) => {
         setValue(response.data.Code);
       })
       .catch((error) => {
@@ -45,7 +55,7 @@ export default function Dashboard() {
     };
 
     axios
-      .post("http://127.0.0.1:5000/check", requestData, {
+      .post("https://e1bc-14-195-9-98.ngrok-free.app/check", requestData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -53,6 +63,8 @@ export default function Dashboard() {
       .then((response) => {
         const parseddata = JSON.parse(response.data.data);
         setCheckContractResponse(parseddata);
+        setIsCheckContract(true);
+        toast.success("Successfully checked!");
       })
       .catch((error) => {
         console.log(error);
@@ -69,7 +81,7 @@ export default function Dashboard() {
     };
 
     axios
-      .post("http://127.0.0.1:5000/deploy", requestData, {
+      .post("https://e1bc-14-195-9-98.ngrok-free.app/deploy", requestData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -78,6 +90,7 @@ export default function Dashboard() {
         console.log("Response:", response);
         const parseddata = JSON.parse(response.data);
         setDeployContractResponse(parseddata);
+        toast.success("Successfully Deployed!");
       })
       .catch((error) => {
         console.log(error);
@@ -96,6 +109,9 @@ export default function Dashboard() {
   ];
   console.log("CheckContractResponse:", CheckContractResponse);
   const [selectedLanguage, setSelectedLanguage] = useState("Rust");
+  const [isCheckContract, setIsCheckContract] = useState(false);
+  const [isDeployContract, setIsDeployContract] = useState(false);
+  const [isTestContract, setIsTestContract] = useState(false);
 
   const obj = ``;
   const [currentPrompt, setCurrentPrompt] = useState(obj);
@@ -120,7 +136,7 @@ export default function Dashboard() {
     };
 
     axios
-      .post("http://127.0.0.1:5000/onchain", requestData, {
+      .post("https://e1bc-14-195-9-98.ngrok-free.app/onchain", requestData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -129,6 +145,7 @@ export default function Dashboard() {
         console.log("Response:", response);
         const parseddata = JSON.parse(response.data);
         setTestResponse(parseddata.output);
+        toast.success("Successfully tested!");
       })
       .catch((error) => {
         console.log(error);
@@ -136,6 +153,10 @@ export default function Dashboard() {
   };
   return (
     <div className="bg-[#141618] flex min-h-screen w-full">
+      <div>
+        <Toaster />
+      </div>
+
       <div
         className="flex w-full bg-[#141618] sm:w-64 m-0 p-0"
         style={{ flex: 0.6 }}
@@ -148,11 +169,13 @@ export default function Dashboard() {
       >
         <div className="flex w-full sm:w-64 m-0 p-0" style={{ flex: 3 }}>
           <div className="flex justify-start flex-col w-full gap-4 items-center mt-12">
-            <div className="gap-2 mb-5 flex flex-col justify-start item-center">
-              <h1 className="font-body font-bold text-3xl  text-blue-950">
+            <div className="gap-2 mb-5 flex flex-col justify-center item-center">
+              <h1 className="font-body4 items-center font-bold text-3xl  text-blue-950">
                 Explain the contract you need{" "}
               </h1>
-              <p className="item-center content-center flex justify-center"></p>
+              <p className="item-center content-center flex justify-center font-body1">
+                Your wallet Id: {address}
+              </p>
             </div>
             <div className="px-12 w-full">
               <div className="flex w-full  border-2 rounded-2xl mt-0 bg-slate-50 justify-between gap-5">
@@ -167,8 +190,10 @@ export default function Dashboard() {
               <Select
                 variant="bordered"
                 label="Select Language"
-                className="max-w-xs mt-2 text-gray-500"
-                onChange={(e) => {
+                className=" mt-3 w-full text-gray-500"
+                onChange={(e: {
+                  target: { value: React.SetStateAction<string> };
+                }) => {
                   setSelectedLanguage(e.target.value);
                 }}
               >
@@ -180,9 +205,9 @@ export default function Dashboard() {
               </Select>
             </div>
 
-            <div className="flex gap-1 w-1/2 flex-col mt-3">
+            <div className="flex gap-1 px-12 justify-start items-start w-full flex-col mt-3">
               <button
-                className="w-full bg-blue-500 text-white  rounded-2xl py-2 "
+                className="w-fit px-8 font-body4 bg-blue-500 text-white  rounded-2xl py-2 "
                 onClick={() =>
                   handleGenerateContract(currentPrompt, selectedLanguage)
                 }
@@ -211,86 +236,108 @@ export default function Dashboard() {
           className="flex w-full rounded-r-3xl bg-slate-200 sm:w-64 m-0 p-0"
           style={{ flex: 1.2 }}
         >
-          <div className="flex flex-col items-left py-6 px-7 mr-4 w-full justify-start">
-            <div className="flex gap-1 w-1/2 flex-col mt-3">
-              <button
-                className="w-full bg-blue-500 text-white  rounded-2xl py-2 "
-                onClick={() =>
-                  handleCheckContract(currentPrompt, selectedLanguage)
-                }
-              >
-                Check Contract
-              </button>
+          <div className="flex flex-col  items-left py-6 px-7 mr-4 w-full justify-between">
+            <div className="">
+              <div className="flex gap-1 w-full flex-col mt-3">
+                <button
+                  className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-2 "
+                  onClick={() =>
+                    handleCheckContract(currentPrompt, selectedLanguage)
+                  }
+                >
+                  Check Contract
+                </button>
+              </div>
+
+              <div className=" text-gray-700">
+                {CheckContractResponse &&
+                  Object.entries(CheckContractResponse).map(([key, value]) => (
+                    <div key={key}>
+                      <h2>{key}</h2>
+                      {value != null ? (
+                        <p className="text-green-400">{value as string}</p>
+                      ) : (
+                        <p className="text-red-500">False</p>
+                      )}{" "}
+                    </div>
+                  ))}
+              </div>
+
+              {isCheckContract && (
+                <div className="flex gap-1 w-full flex-col mt-3">
+                  <button
+                    className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-2 "
+                    onClick={() =>
+                      handleDeployContract(currentPrompt, selectedLanguage)
+                    }
+                  >
+                    Deploy Contract
+                  </button>
+                </div>
+              )}
+
+              <div className=" text-gray-700">
+                {DeployContractResponse &&
+                  Object.entries(DeployContractResponse).map(([key, value]) => (
+                    <div key={key}>
+                      <h2>{key}</h2>
+                      {value != null ? (
+                        <p className="text-green-400">{value as string}</p>
+                      ) : (
+                        <p className="text-red-500">False</p>
+                      )}{" "}
+                    </div>
+                  ))}
+              </div>
             </div>
+            {!isTestContract && (
+              <div>
+                {" "}
+                <div className="flex gap-1 w-full flex-col mt-3">
+                  <button
+                    className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-2 "
+                    onClick={() => setIsTestContract(true)}
+                  >
+                    Test Contract{" "}
+                  </button>
+                </div>
+              </div>
+            )}
+            {isTestContract && (
+              <div className=" py-7 bg-[#001d32] rounded-xl w-full px-5 mb-5">
+                <div className="flex flex-col">
+                  <Input
+                    type="text"
+                    variant="filled"
+                    placeholder="Enter Contract Address"
+                    className="w-full text-black mt-2 font-body4 rounded-2xl  "
+                    onChange={(e: any) => {
+                      setChainAdress(e.target.value);
+                    }}
+                  />
+                  <Input
+                    type="text"
+                    variant="filled"
+                    placeholder="Enter value to test"
+                    className="w-full text-black mt-2 mb-2 font-body4 rounded-2xl  "
+                    onChange={(e: any) => {
+                      setTestValue(e.target.value);
+                    }}
+                  />
 
-            <div className=" text-gray-700">
-              {CheckContractResponse &&
-                Object.entries(CheckContractResponse).map(([key, value]) => (
-                  <div key={key}>
-                    <h2>{key}</h2>
-                    {value != null ? (
-                      <p className="text-green-400">{value as string}</p>
-                    ) : (
-                      <p className="text-red-500">False</p>
-                    )}{" "}
-                  </div>
-                ))}
-            </div>
+                  <button
+                    className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-3 "
+                    onClick={() => handleTest(currentPrompt, selectedLanguage)}
+                  >
+                    Test
+                  </button>
 
-            <div className="flex gap-1 w-1/2 flex-col mt-3">
-              <button
-                className="w-full bg-blue-500 text-white  rounded-2xl py-2 "
-                onClick={() =>
-                  handleDeployContract(currentPrompt, selectedLanguage)
-                }
-              >
-                Deploy Contract
-              </button>
-            </div>
-
-            <div className=" text-gray-700">
-              {DeployContractResponse &&
-                Object.entries(DeployContractResponse).map(([key, value]) => (
-                  <div key={key}>
-                    <h2>{key}</h2>
-                    {value != null ? (
-                      <p className="text-green-400">{value as string}</p>
-                    ) : (
-                      <p className="text-red-500">False</p>
-                    )}{" "}
-                  </div>
-                ))}
-            </div>
-
-            <div className="flex flex-col">
-              <input
-                type="text"
-                placeholder="Enter Contract Address"
-                className="w-full px-4 py-3 mt-2 rounded-2xl bg-slate-50 text-gray-600 "
-                onChange={(e) => {
-                  setChainAdress(e.target.value);
-                }}
-              />
-              <input
-                type="number"
-                placeholder="Enter value to test"
-                className="w-full px-4 py-3 my-2 rounded-2xl bg-slate-50 text-gray-600 "
-                onChange={(e) => {
-                  setTestValue(e.target.value);
-                }}
-              />
-
-              <button
-                className="w-full bg-blue-500 text-white  rounded-2xl py-2 "
-                onClick={() =>
-                  handleTest(currentPrompt, selectedLanguage)
-                }
-              >
-                Test
-              </button>
-
-              {testResponse && <p className="text-green-400">{testResponse}</p>}
-            </div>
+                  {testResponse && (
+                    <p className="text-green-400">{testResponse}</p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
