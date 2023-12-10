@@ -2,7 +2,7 @@
 
 import { run } from "node:test";
 import React, { useState, useEffect } from "react";
-import { Input, Select, SelectItem } from "@nextui-org/react";
+import { Input, Select, SelectIte, Button } from "@nextui-org/react";
 import CodeMirror from "@uiw/react-codemirror";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import { dracula } from "@uiw/codemirror-theme-dracula";
@@ -15,8 +15,8 @@ import Rightbar from "./Rightbar";
 
 export default function Dashboard() {
   const [address, setAddress] = useState<String>("");
-  
 
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const address = window.localStorage.getItem("address");
     setAddress(address || "");
@@ -24,6 +24,7 @@ export default function Dashboard() {
   console.log("Address:", address);
 
   const handleGenerateContract = (prompt: string, language: string) => {
+    setIsLoading(true);
     // Your code to make the Axios request
     const requestData = {
       prompt: prompt || "simple hash function",
@@ -40,9 +41,11 @@ export default function Dashboard() {
       })
       .then((response: { data: { Code: React.SetStateAction<string> } }) => {
         setValue(response.data.Code);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setIsLoading(false);
       });
   };
 
@@ -73,6 +76,7 @@ export default function Dashboard() {
 
   const [DeployContractResponse, setDeployContractResponse] = useState(null);
   const handleDeployContract = (prompt: string, language: string) => {
+    setIsLoading(true);
     console.log("Deploy Contract");
     // Your code to make the Axios request
     const requestData = {
@@ -91,9 +95,11 @@ export default function Dashboard() {
         const parseddata = JSON.parse(response.data);
         setDeployContractResponse(parseddata);
         toast.success("Successfully Deployed!");
+        setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setIsLoading(false);
       });
   };
   const languages = [
@@ -128,6 +134,7 @@ export default function Dashboard() {
   const [chainadress, setChainAdress] = useState("0x0");
   const [testResponse, setTestResponse] = useState(null);
   const handleTest = (prompt: string, language: string) => {
+    setIsLoading(true);
     console.log("Deploy Contract");
     // Your code to make the Axios request
     const requestData = {
@@ -146,9 +153,11 @@ export default function Dashboard() {
         const parseddata = JSON.parse(response.data);
         setTestResponse(parseddata.output);
         toast.success("Successfully tested!");
+        setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setIsLoading(false);
       });
   };
   return (
@@ -206,14 +215,15 @@ export default function Dashboard() {
             </div>
 
             <div className="flex gap-1 px-12 justify-start items-start w-full flex-col mt-3">
-              <button
+              <Button
+                isLoading={isLoading}
                 className="w-fit px-8 font-body4 bg-blue-500 text-white  rounded-2xl py-2 "
                 onClick={() =>
                   handleGenerateContract(currentPrompt, selectedLanguage)
                 }
               >
                 Generate Contract
-              </button>
+              </Button>
             </div>
 
             <div className="w-full rounded-xl px-14 ">
@@ -239,14 +249,15 @@ export default function Dashboard() {
           <div className="flex flex-col  items-left py-6 px-7 mr-4 w-full justify-between">
             <div className="">
               <div className="flex gap-1 w-full flex-col mt-3">
-                <button
+                <Button
+                  isLoading={isLoading}
                   className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-2 "
                   onClick={() =>
                     handleCheckContract(currentPrompt, selectedLanguage)
                   }
                 >
                   Check Contract
-                </button>
+                </Button>
               </div>
 
               <div className=" text-gray-700">
@@ -265,14 +276,15 @@ export default function Dashboard() {
 
               {isCheckContract && (
                 <div className="flex gap-1 w-full flex-col mt-3">
-                  <button
+                  <Button
+                    isLoading={isLoading}
                     className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-2 "
                     onClick={() =>
                       handleDeployContract(currentPrompt, selectedLanguage)
                     }
                   >
                     Deploy Contract
-                  </button>
+                  </Button>
                 </div>
               )}
 
@@ -325,12 +337,13 @@ export default function Dashboard() {
                     }}
                   />
 
-                  <button
+                  <Button
+                    isLoading={isLoading}
                     className="w-full bg-blue-500 font-body4 text-white  rounded-2xl py-3 "
                     onClick={() => handleTest(currentPrompt, selectedLanguage)}
                   >
                     Test
-                  </button>
+                  </Button>
 
                   {testResponse && (
                     <p className="text-green-400">{testResponse}</p>
