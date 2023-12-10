@@ -140,7 +140,6 @@ export default function Dashboard() {
   const [chainadress, setChainAdress] = useState("0x0");
   const [testResponse, setTestResponse] = useState(null);
   const handleTest = (prompt: string, language: string) => {
-    toast.success("Successfully tested!");
     setIsLoadingt(true);
     console.log("Deploy Contract");
     // Your code to make the Axios request
@@ -148,17 +147,18 @@ export default function Dashboard() {
       input: testvalue,
       program: chainadress,
     };
+    console.log("Request Data:", requestData);
 
     axios
-      .post("https://e1bc-14-195-9-98.ngrok-free.app/onchain", requestData, {
+      .post("https://1ad7-14-195-9-98.ngrok-free.app/onchain", requestData, {
         headers: {
           "Content-Type": "application/json",
+
         },
       })
       .then((response) => {
         console.log("Response:", response);
-        const parseddata = JSON.parse(response.data);
-        setTestResponse(parseddata.output);
+        setTestResponse(response.data.output);
         toast.success("Successfully tested!");
         setIsLoadingt(false);
       })
@@ -339,7 +339,7 @@ export default function Dashboard() {
               </div>
             )}
             {isTestContract && (
-              <div className=" py-7 bg-[#001d32] rounded-xl w-full px-5 mb-5">
+              <div className=" py-7 mt-6 bg-[#001d32] rounded-xl w-full px-5 mb-5">
                 <div className="flex flex-col">
                   <Input
                     type="text"
@@ -369,7 +369,7 @@ export default function Dashboard() {
                   </Button>
 
                   {testResponse && (
-                    <p className="text-green-400">{testResponse}</p>
+                    <p className="text-green-800  px-2 py-2 border border-green-400 bg-white rounded-xl mt-3">{testResponse}</p>
                   )}
                 </div>
               </div>
