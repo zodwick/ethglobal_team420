@@ -3,12 +3,18 @@
 import React, { useCallback } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
 
 export default function page() {
     const [address, setAddress] = useState("");
     const router = useRouter();
   const _connectToMetaMask = useCallback(async () => {
-    const ethereum = window.ethereum;
+   
+    const ethereum: any = (window as Window & typeof globalThis).ethereum;
     // Check if MetaMask is installed
     if (typeof ethereum !== "undefined") {
       try {

@@ -343,7 +343,7 @@ export default function Dashboard() {
                 <div className="flex flex-col">
                   <Input
                     type="text"
-                    variant="filled"
+                    variant="flat"
                     placeholder="Enter Contract Address"
                     className="w-full text-black mt-2 font-body4 rounded-2xl  "
                     onChange={(e: any) => {
@@ -352,7 +352,7 @@ export default function Dashboard() {
                   />
                   <Input
                     type="text"
-                    variant="filled"
+                    variant="flat"
                     placeholder="Enter value to test"
                     className="w-full text-black mt-2 mb-2 font-body4 rounded-2xl  "
                     onChange={(e: any) => {

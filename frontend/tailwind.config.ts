@@ -20,11 +20,11 @@ const config: Config = {
         body6: ["ClashDisplay-Semibold"],
       },
       fontWeight: {
-        300: 300,
-        500: 500,
-        600: 600,
-        700: 700,
-        800: 800,
+        "300": "300",
+        "500": "500",
+        "600": "600",
+        "700": "700",
+        "800": "800",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
