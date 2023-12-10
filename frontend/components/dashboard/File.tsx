@@ -1,7 +1,7 @@
 "use client";
 
 import { run } from "node:test";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 import CodeMirror from "@uiw/react-codemirror";
 import { githubDark } from "@uiw/codemirror-theme-github";
@@ -10,9 +10,17 @@ import { langs } from "@uiw/codemirror-extensions-langs";
 
 export default function File() {
   const [send, setSend] = useState(false);
+  const [address, setAddress] = useState("");
   const [scannedText, setScannedText] = useState(
     `// Only run this as a WASM if the export-abi feature is not set.\n#![cfg_attr(not(feature = \"export-abi\"), no_main)]\nextern crate alloc;\n\n/// Initializes a custom, global allocator for Rust programs compiled to WASM.\n#[global_allocator]\nstatic ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;\n\n/// Import the Stylus SDK along with alloy primitive types for use in our program.\nuse stylus_sdk::{alloy_primitives::U256, alloy_primitives::FixedBytes, crypto::keccak, prelude::*};\n// use sha3::{Digest, Keccak256};\n\n// Define the entrypoint as a Solidity storage object\nsol_storage! {\n    #[entrypoint]\n    pub struct Hasher {\n        bytes32 hash;\n    }\n}\n\n/// Define an implementation of the generated Hasher struct\n#[external]\nimpl Hasher {\n    pub fn hash(&self) -> Result<FixedBytes<32>, Vec<u8>> {\n        Ok(self.hash.get().0.into())\n    }\n\n    pub fn keccak_loop(&mut self, input_string: String, amount: U256) -> Result<(), Vec<u8>> {\n        let mut hash = input_string.as_bytes();\n        let mut hashed_value: FixedBytes<32>;\n        for _ in 0..amount.try_into().unwrap() {\n            hashed_value = keccak(hash);\n            hash = hashed_value.as_slice();\n        }\n\n        let hash_hex: Vec<String> = hash.iter().map(|b| format!(\"{:02x}\", b)).collect();\n        let hash_hex = hash_hex.join(\"\");\n\n        self.hash.set(hash_hex.parse::<FixedBytes<32>>().unwrap());\n        Ok(())\n}\n}`
   );
+
+  useEffect(() => {
+    const address = window.localStorage.getItem("address");
+    setAddress(address);
+  }
+    , []);
+  
 
   const obj = ``;
   const [value, setValue] = React.useState(
