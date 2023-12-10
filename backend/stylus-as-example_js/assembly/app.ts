@@ -11,13 +11,29 @@ function usqrt(n: i32): i32 {
   return x;
 }
 
-function sqrtOfTwoNumbers(a: i32, b: i32): i32 {
-  // Calculate the square root of each number
-  const sqrtA = usqrt(a);
-  const sqrtB = usqrt(b);
+function isNotPrime(n: i32): i32 {
+  // 0 here is meant to be interpreted as prime
+  if (n < 2) {
+    return 0;
+  }
 
-  // Return the sum of the square roots
-  return sqrtA + sqrtB;
+  // If 2 is passed, return 0 (prime)
+  if (n == 2) {
+    return 0;
+  }
+
+  // Square root (max)
+  const maxNumberToCheck = usqrt(n);
+
+  for (let i: i32 = 2; i <= maxNumberToCheck; i++) {
+    // If n is divisible by any number between 2 and its square root, it's not prime
+    if (n % i == 0) {
+      return 1;
+    }
+  }
+
+  // If no divisors were found, the number is prime
+  return 0;
 }
 
 /**
@@ -28,11 +44,7 @@ function sqrtOfTwoNumbers(a: i32, b: i32): i32 {
  * @returns bytes in Uint8Array
  */
 export const main = (input: Uint8Array): Uint8Array => {
-  // Assume the input is two 4-byte integers concatenated together
-  const a = bytesToI32(input.slice(0, 4));
-  const b = bytesToI32(input.slice(4, 8));
-
-  const result = sqrtOfTwoNumbers(a, b);
-
+  const number = bytesToI32(input);
+  const result = isNotPrime(number);
   return i32ToBytes(result);
 };
